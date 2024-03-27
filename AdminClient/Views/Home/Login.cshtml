@@ -1,0 +1,447 @@
+﻿@{
+    Layout = null;
+}
+
+
+
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- ===============================================-->
+    <!--    Document Title-->
+    <!-- ===============================================-->
+    <title>Das Events Admin</title>
+
+    <!-- ===============================================-->
+    <!--    Favicons-->
+    <!-- ===============================================-->
+    <link rel="apple-touch-icon" sizes="180x180" href="~/eorderbook/assets/img/icons/illustrations/daslogo.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="~/eorderbook/assets/img/icons/illustrations/daslogo.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="~/eorderbook/assets/img/icons/illustrations/daslogo.png">
+    <link rel="shortcut icon" type="image/x-icon" href="~/eorderbook/assets/img/icons/illustrations/daslogo.png">
+    <link rel="manifest" href="~/EOrderBook/assets/img/favicons/manifest.json">
+    <meta name="msapplication-TileImage" content="~/eorderbook/assets/img/icons/illustrations/daslogo.png">
+    <meta name="theme-color" content="#ffffff">
+    <script src="~/EOrderBook/assets//js/vendors/imagesloaded/imagesloaded.pkgd.min.js"></script>
+    <script src="~/EOrderBook/assets/js/vendors/simplebar/simplebar.min.js"></script>
+    <script src="~/EOrderBook/assets/js/config.js"></script>
+
+    <!-- ===============================================-->
+    <!--    Stylesheets-->
+    <!-- ===============================================-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="../../../../../css2?family=Nunito+Sans:wght@300;400;600;700;800;900&amp;display=swap" rel="stylesheet">
+    <link href="~/EOrderBook/assets/js/vendors/simplebar/simplebar.min.js" rel="stylesheet">
+    <link rel="stylesheet" href="~/EOrderBook/assets/js/vendors/release/v4.0.0/css/line.css">
+    <link href="~/EOrderBook/assets/css/theme-rtl.min.css" type="text/css" rel="stylesheet" id="style-rtl">
+    <link href="~/EOrderBook/assets/css/theme.min.css" type="text/css" rel="stylesheet" id="style-default">
+    <link href="~/EOrderBook/assets/css/user-rtl.min.css" type="text/css" rel="stylesheet" id="user-style-rtl">
+    <link href="~/EOrderBook/assets/css/user.min.css" type="text/css" rel="stylesheet" id="user-style-default">
+    <style>
+       
+
+    * {
+    margin: 0;
+    padding: 0;
+    font-family: 'El Messiri', sans-serif;
+    }
+
+    body {
+    background: #031323;
+    overflow: hidden;
+    }
+
+    .fas {
+    width: 32px;
+    }
+
+    section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+    background-size: 400% 400%;
+    animation: gradient 10s ease infinite;
+    }
+
+    @@keyframes gradient {
+    0% {
+    background-position: 0% 50%;
+    }
+    50% {
+    background-position: 100% 50%;
+    }
+    100% {
+    background-position: 0% 50%;
+    }
+    }
+
+    .box {
+    position: relative;
+
+    .square {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+    box-shadow: 0 25px 45px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 15px;
+    animation: square 10s linear infinite;
+    animation-delay: calc(-1s * var(--i));
+    }
+
+    @@keyframes square {
+    0%,100% {
+    transform: translateY(-20px);
+    }
+
+    50% {
+    transform: translateY(20px);
+    }
+    }
+
+    .square:nth-child(1) {
+    width: 100px;
+    height: 100px;
+    top: -15px;
+    right: -45px;
+    }
+
+    .square:nth-child(2) {
+    width: 150px;
+    height: 150px;
+    top: 105px;
+    left: -125px;
+    z-index: 2;
+    }
+
+    .square:nth-child(3) {
+    width: 60px;
+    height: 60px;
+    bottom: 85px;
+    right: -45px;
+    z-index: 2;
+    }
+
+    .square:nth-child(4) {
+    width: 50px;
+    height: 50px;
+    bottom: 35px;
+    left: -95px;
+    }
+
+    .square:nth-child(5) {
+    width: 50px;
+    height: 50px;
+    top: -15px;
+    left: -25px;
+    }
+
+    .square:nth-child(6) {
+    width: 85px;
+    height: 85px;
+    top: 165px;
+    right: -155px;
+    z-index: 2;
+    }
+    }
+
+    .container {
+    position: relative;
+    padding: 50px;
+    width: 360px;
+    min-height: 460px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+    border-radius: 10px;
+    box-shadow: 0 25px 45px rgba(0, 0, 0, 0.2);
+    }
+
+    .container::after {
+    content: '';
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    bottom: 5px;
+    left: 5px;
+    border-radius: 5px;
+    pointer-events: none;
+    background: linear-gradient( to bottom, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.1) 2%
+    );
+    }
+
+    .form {
+    position: relative;
+    width: 100%;
+    height: 100%;
+
+    h2 {
+    color: #fff;
+    letter-spacing: 2px;
+    margin-bottom: 30px;
+    margin-left: 74px;
+    margin-top: 10px;
+        
+        }
+    }
+
+    .inputBx {
+    position: relative;
+    width: 100%;
+    margin-bottom: 19px;
+
+    input {
+    width: 103%;
+    outline: none;
+    border: none;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.2);
+    padding: 8px 10px;
+    padding-left: 40px;
+    border-radius: 15px;
+    color: #fff;
+    font-size: 16px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .password-control {
+    position: absolute;
+    top: 11px;
+    right: 10px;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background: url(https://snipp.ru/demo/495/view.svg) 0 0 no-repeat;
+    transition: 0.5s;
+    }
+
+    .view {
+    background: url(https://snipp.ru/demo/495/no-view.svg) 0 0 no-repeat;
+    transition: 0.5s;
+    }
+
+
+
+    .fas {
+    position: absolute;
+    top: 13px;
+    left: 13px;
+    }
+
+    input[type="submit"] {
+    background: #fff;
+    color: #111;
+    max-width: 302px;
+    padding: 12px 10px;
+    box-shadow: none;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: 1.5s;
+    }
+
+    input[type="submit"]:hover {
+    background: linear-gradient(115deg,
+    rgba(0,0,0,0.10),
+    rgba(255,255,255,0.25));
+    color: #fff;
+    transition: .5s;
+    }
+
+    input::placeholder {
+    color: #fff;
+    }
+
+    span {
+    position: absolute;
+    left: 30px;
+    padding: 10px;
+    display: inline-block;
+    color: #fff;
+    transition: .5s;
+    pointer-events: none;
+    }
+
+    input:focus ~ span,
+    input:valid ~ span {
+    transform: translateX(-30px) translateY(-25px);
+    font-size: 12px;
+    }
+    }
+
+    p {
+    color: #fff;
+    font-size: 15px;
+    margin-top: 5px;
+
+    a {
+    color: #fff;
+    }
+
+    a:hover {
+    background-color: #000;
+    background-image: linear-gradient(to right, #434343 0%, black 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    }
+    }
+    }
+
+    .remember {
+    position: relative;
+    display: inline-block;
+    color: #fff;
+    margin-bottom: 10px;
+    cursor: pointer;
+    }
+
+    .logo {
+            height: 52px;
+            width:152px;
+            padding: 3px;
+            margin-left: 48px;
+        }
+
+    .btn {
+        background-color:cadetblue;
+    }
+
+    </style>
+
+    
+</head>
+
+<body>
+
+
+    <section>
+
+        <div class="box">
+
+            <div class="square" style="--i:0;"></div>
+            <div class="square" style="--i:1;"></div>
+            <div class="square" style="--i:2;"></div>
+            <div class="square" style="--i:3;"></div>
+            <div class="square" style="--i:4;"></div>
+            <div class="square" style="--i:5;"></div>
+
+            <div class="container">
+                <div class="form">
+                    
+                    <img src="~/images/daslogo5.png" alt="Logo" class="logo">
+                    <h2>LOGIN</h2>
+                    <form class="login100-form validate-form" action="/" method="POST">
+                        <span>Username</span>
+                        <div class="inputBx">
+                            <input class="form-control form-icon-input" name="username" type="text" id="typepass" placeholder="name@eorderbook.com">
+                            @* <span class="fas fa-user text-900 fs--1 form-icon"></span> *@
+                            @* <span>Username</span>
+                            <i class="fas fa-user-circle"></i> *@
+                        </div>
+                        <span>Password</span>
+                        <div class="inputBx password">
+                            <input id="password-input" type="password" name="password" required="required">
+                            @* <span>Password</span> *@
+                            <a href="#" class="password-control" onclick="return show_hide_password(this);"></a>
+                            @* <i class="fas fa-key"></i> *@
+                        </div>
+                        
+                        
+                       
+                        <button type="submit" class="btn btn-primary w-100 mb-3">Log in</button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+   @*  <div class="right-side">
+        <form class="login100-form validate-form" action="/" method="POST">
+            <div class="col mx-auto">
+                <div class="auth-form-box">
+                    <div class="text-center mb-5">
+                        <a class="d-flex flex-center text-decoration-none mb-4" href="../../../index.html">
+
+                            <div class="d-flex align-items-center fw-bolder fs-5 d-inline-block"><img class="mainlogo" src="~/eorderbook/assets/img/icons/illustrations/daslogo.png" alt="phoenix" width="58"></div>
+                        </a>
+                    </div>
+
+                    <div class="mb-3 text-start">
+                        <label class="form-label" for="email">User Name</label>
+                        <div class="form-icon-container"><input class="form-control form-icon-input" name="username" type="text" placeholder="name@eorderbook.com"><span class="fas fa-user text-900 fs--1 form-icon"></span></div>
+                    </div>
+                    <div class="mb-3 text-start position-relative">
+                        <label class="form-label" for="password">Password</label>
+                        <div class="form-icon-container d-flex align-items-center">
+                            <input class="form-control form-icon-input" name="password" type="password" id="typepass" placeholder="Password">
+                            <span class="fas fa-key  text-900 fs--1 form-icon"></span>
+                            <span class="fas  fa-eye-slash  text-900 fs--1 form-icon"></span>
+                            <span id="togglePassword" class="fas fa-eye-slash text-secondary fs--1 form-icon"> </span>
+                        </div>
+                    </div>
+
+                    <div class="row flex-between-center mb-7">
+                        <div class="col-auto">
+                            <div class="form-check mb-0"><input class="form-check-input" id="basic-checkbox" type="checkbox" onclick="Toggle()"><label class="form-check-label mb-0" for="basic-checkbox">Show passward</label></div>
+                        </div>
+                    </div><button type="submit" class="btn btn-primary w-100 mb-3">Sign In</button>
+
+                    <div class=" flex-c-m text-center mt-3">
+                        <div class="login-logo">
+                            <div class="alert alert-danger" role="alert" style="display: table-row-group;">
+                                @ViewBag.ErrorMessage
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div> *@
+
+
+  
+    <!-- ===============================================-->
+    <!--    JavaScripts-->
+    <script src="~/EOrderBook/assets/js/vendors/popper/popper.min.js"></script>
+    <script src="~/EOrderBook/assets/js/vendors/popper/popper.min.js"></script>
+    <script src="~/EOrderBook/assets/js/vendors/anchorjs/anchor.min.js"></script>
+    <script src="~/EOrderBook/assets/js/vendors/is/is.min.js"></script>
+    <script src="~/EOrderBook/assets/js/vendors/fontawesome/all.min.js"></script>
+    <script src="~/EOrderBook/assets/js/vendors/lodash/lodash.min.js"></script>
+    <script src="~/EOrderBook/assets/js/vendors/v3/polyfill.min.js"></script>
+    <script src="~/EOrderBook/assets/js/vendors/list.js/list.min.js"></script>
+    <script src="~/EOrderBook/assets/js/vendors/feather-icons/feather.min.js"></script>
+    <script src="~/EOrderBook/assets/js/vendors/dayjs/dayjs.min.js"></script>
+    <script src="~/EOrderBook/assets/js/phoenix.js"></script>
+
+    <script src="~/js/custom.js"></script>
+    <script>
+        function show_hide_password(target){
+	var input = document.getElementById('password-input');
+	if (input.getAttribute('type') == 'password') {
+		target.classList.add('view');
+		input.setAttribute('type', 'text');
+	} else {
+		target.classList.remove('view');
+		input.setAttribute('type', 'password');
+	}
+	return false;
+}
+    </script>
+
+
+</body>
+
+</html>
+
+

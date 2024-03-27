@@ -1,0 +1,284 @@
+﻿@using Microsoft.Extensions.Configuration;
+@using Microsoft.AspNetCore.Http
+@inject IConfiguration Configuration;
+
+@{
+    ViewBag.Title = "DigitalCatalog Edit";
+    string apiUrl = Configuration.GetValue<string>("WebAPIBaseUrl");
+}
+
+
+<!-- PAGE-HEADER -->
+<div class="page-header">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item" aria-current="page"><a href="#"><i class="fe fe-file-text mr-1"></i>Digital Catalog Edit</a></li>
+       @*  <li class="breadcrumb-item active" aria-current="page">Digital Catalog Edit</li> *@
+    </ol>
+    <div class="ml-auto">
+        <a href="~/DigitalCatalogController1/ViewDigitalCatalog" class="btn btn-primary btn-icon btn-sm text-white mr-2">
+            <span>
+                <i class="fe fe-plus"></i>
+            </span> View
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md">
+        <div class="card overflow-hidden">
+            <div class="card-header">
+                <h3 class="card-title">Digital Catalog</h3>
+            </div>
+            <div class="card-body">
+                <form action="#" role="form" class="validate" id="formPost">
+                    <div class="row">
+
+
+                       @*  <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="form-label">Brand &nbsp;<span style="color: red;"><b>*</b></span></label>
+                                <div class="input-box">
+                                    <select class="form-control" id="selectbrand">
+                                    </select>
+                                </div>
+                            </div>
+                        </div> *@
+
+                       @*  <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="form-label">Category Name &nbsp;<span style="color: red;"><b>*</b></span></label>
+                                <div class="input-box">
+                                    <select class="form-control" id="selectcategory">
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+ *@
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="form-label">Occasion name &nbsp;<span style="color: red;"><b>*</b></span></label>
+                                <input type="text" class="form-control" id="Name" placeholder="Name" required>
+                            </div>
+                        </div>
+
+                       @*  <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="form-label">price &nbsp;<span style="color: red;"><b>*</b></span></label>
+                                <input type="text" class="form-control" id="price" placeholder="price" required>
+                            </div>
+                        </div> *@
+                        
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="form-label">descriptionHeading &nbsp;<span style="color: red;"><b>*</b></span></label>
+                                <input type="text" class="form-control" id="descriptionHeading" placeholder="descriptionHeading" required>
+                            </div>
+                        </div>
+
+                        
+
+                        @* <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="form-label">pageTitle &nbsp;<span style="color: red;"><b>*</b></span></label>
+                                <input type="text" class="form-control" id="pageTitle" placeholder="pageTitle" required>
+                            </div>
+                        </div> *@
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="form-label">Image &nbsp;<span style="color: red;"><b>*</b></span></label>
+                                <input type="file" class="form-control" id="imageee">
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="form-label">Inside Image &nbsp;<span style="color: red;"><b>*</b></span></label>
+                                <input type="file" class="form-control" id="insider" multiple>
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">description  &nbsp;<span style="color: red;"><b>*</b></span></label>
+                                <textarea type="text" class="form-control" id="description" placeholder="description" required></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <img id="firstimg" src="" width="100" class="rounded-square" />
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <img id="secimg" src="" width="100" class="rounded-square" />
+                            </div>
+                        </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button type="button" id="btnupdate" class="btn btn-radius btn-success">Update</button>
+                                <a type="button" href="~/DigitalCatalogController1/CreateDigitalCatalog" class="btn btn-radius btn-danger">Reset</a>
+                        </div>
+                    </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts {
+    <script>
+        var digitalCatalogId = @ViewBag.digitalCatalogId;
+
+        $(document).ready(function () {
+            loadDigital();
+        });
+
+        function loadDigital() {
+            $.ajax({
+                type: "GET",
+                url: "@apiUrl/api/DigitalCatalog/GetSingleDigitalCatalogId/" + digitalCatalogId,
+                contentType: "application/json; charset=utf-8",
+                headers: {
+                    "authorization": "Bearer @Context.Session.GetString("TokenTxt")"
+                },
+                dataType: "json",
+                success: function (data) {
+                    if (data) {
+                        $('#Name').val(data.name);
+                        $('#descriptionHeading').val(data.descriptionHeading);
+                        $('#description').val(data.description);
+                        $('#firstimg').attr('src', data.image);
+                        $('#secimg').attr('src', data.insideImage);
+                    } else {
+                        sweetAlert("Validation Alert!", "Something unexpected!", "warning");
+                    }
+                },
+                error: function (data) {
+                    if (data.status == 401) {
+                        window.location.replace('/Message/TokenExpire');
+                    } else if (data.status == 403) {
+                        window.location.replace('/Message/Unauthorize');
+                    }
+                }
+            });
+        }
+
+        $("#btnupdate").click(function (e) {
+            e.preventDefault();
+
+            if (!document.getElementById("formPost").checkValidity()) {
+                return;
+            }
+
+            uploadFiles();
+        });
+
+        function uploadFiles() {
+            var formData = new FormData();
+
+            var imageFiles = document.getElementById('imageee').files;
+            for (var i = 0; i < imageFiles.length; i++) {
+                formData.append("imageFiles", imageFiles[i]);
+            }
+
+            var insideImageFiles = document.getElementById('insider').files;
+            for (var i = 0; i < insideImageFiles.length; i++) {
+                formData.append("insideImageFiles", insideImageFiles[i]);
+            }
+
+            $.ajax({
+                url: "/Upload/ImgUploadMultiple",
+                data: formData,
+                processData: false,
+                contentType: false,
+                type: "POST",
+                success: function (data) {
+                    var imgPath = data.imagePath;
+                    var imgPath1 = data.insideImagePath;
+
+                    updateCatalog(imgPath, imgPath1);
+                },
+                error: function (xhr) {
+                    console.log(xhr.responseText); // Log the full response for debugging
+                    handleAjaxError(xhr);
+                }
+            });
+        }
+
+        function updateCatalog(imgPath, imgPath1) {
+            var model = {
+                digitalCatalogId: digitalCatalogId,
+                name: $.trim($("#Name").val()),
+                descriptionHeading: $.trim($("#descriptionHeading").val()),
+                description: $.trim($("#description").val()),
+                image: imgPath,
+                insideImage: imgPath1,
+                updatedBy: @Context.Session.GetInt32("UserId"),
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "@apiUrl/api/DigitalCatalog/UpdateDigitalCatalog",
+                data: JSON.stringify(model),
+                contentType: "application/json; charset=utf-8",
+                headers: {
+                    "authorization": "Bearer @Context.Session.GetString("TokenTxt")"
+                },
+                success: function (data, statusText, xhr) {
+                    console.log(data);
+                    if (xhr.status === 200) {
+                        $('#PlantMaster_Tb').DataTable().ajax.reload(null, false);
+                        sweetAlert({
+                            html: true,
+                            icon: "success",
+                            title: "Catalog",
+                            text: "Successfully updated!",
+                            type: "success"
+                        });
+                    } else if (data.status === "duplicate") {
+                        sweetAlert("Validation Alert!", data.responseMsg, "warning");
+                    } else if (data.status === "error") {
+                        sweetAlert("Validation Alert!", data.responseMsg, "warning");
+                    } else {
+                        sweetAlert("Validation Alert!", "Something unexpected!", "warning");
+                    }
+                },
+                error: function (data) {
+                    console.log(data);
+                    if (data.status == 401) {
+                        window.location.replace('/Message/TokenExpire');
+                    } else if (data.status == 403) {
+                        window.location.replace('/Message/Unauthorize');
+                    } else if (data.status == 400) {
+                        sweetAlert("Validation Alert!", "Please check input data!", "warning");
+                    }
+                }
+            });
+        }
+
+        function handleAjaxError(xhr) {
+            if (xhr.status == 401) {
+                // Session expired
+                Swal.fire({
+                    html: true,
+                    title: "Session Expired",
+                    text: "Your current session has expired. You may return to login to start your task again.",
+                    icon: "error",
+                    showCancelButton: true,
+                    confirmButtonText: "Login",
+                    cancelButtonText: "Cancel"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = "/Login"; // Redirect to login page
+                    }
+                });
+            } else {
+                // Other error
+                Swal.fire("Error", "An unexpected error occurred. Please try again later.", "error");
+            }
+        }
+    </script>
+}
+

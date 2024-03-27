@@ -1,0 +1,290 @@
+﻿@using Microsoft.Extensions.Configuration;
+@using Microsoft.AspNetCore.Http
+@inject IConfiguration Configuration;
+
+@{
+    ViewBag.Title = "Inspection Pass";
+    string apiUrl = Configuration.GetValue<string>("WebAPIBaseUrl");
+}
+<style>
+    #preloader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+    }
+
+    .spinner {
+        border: 4px solid rgba(255, 255, 255, 0.3);
+        border-top: 4px solid #fff;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+    }
+
+    @@keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+</style>
+<!-- PAGE-HEADER -->
+<div class="page-header">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item" aria-current="page"><a href="#"><i class="fe fe-file-text mr-1"></i>Digital Catalog Create</a></li>
+        @* <li class="breadcrumb-item active" aria-current="page">Digital Catalog Create </li> *@
+    </ol>
+    <div class="ml-auto">
+        <a href="~/DigitalCatalogController1/ViewDigitalCatalog" class="btn btn-primary btn-icon btn-sm text-white mr-2">
+            <span>
+                <i class="fe fe-plus"></i>
+            </span> View
+        </a>
+    </div>
+</div>
+<!-- PAGE-HEADER END -->
+
+
+<div id="preloader" class="d-none">
+    <div class="spinner"></div>
+</div>
+
+<div class="row">
+    <div class="col-md">
+        <div class="card overflow-hidden">
+            <div class="card-header">
+                <h3 class="card-title">Digital Catalog Create</h3>
+            </div>
+            <div class="card-body">
+                <form action="#" role="form" class="validate" id="formPost">
+                    <div class="row">
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="form-label">Occasion Name &nbsp;<span style="color: red;"><b>*</b></span></label>
+                                <input type="text" class="form-control" id="Name" placeholder="Name" required>
+                            </div>
+                        </div>
+                        @* <div class="col-md-3">
+                        <div class="form-group">
+                        <label class="form-label">Price &nbsp;<span style="color: red;"><b>*</b></span></label>
+                        <input type="number" class="form-control" id="price" placeholder="price" required>
+                        </div>
+                        </div> *@
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="form-label">Image &nbsp;<span style="color: red;"><b>*</b></span></label>
+                                <input type="file" class="form-control" id="imageee" required>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="form-label">Insider Image &nbsp;<span style="color: red;"><b>*</b></span></label>
+                                <input type="file" class="form-control" id="insider" multiple required>
+                            </div>
+                        </div>
+
+
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="form-label">descriptionHeading &nbsp;<span style="color: red;"><b>*</b></span></label>
+                                <input type="text" class="form-control" id="descriptionHeading" placeholder="descriptionHeading" required>
+                            </div>
+                        </div>
+
+                        @* <div class="col-md-3">
+                        <div class="form-group">
+                        <label class="form-label">Page Title &nbsp;<span style="color: red;"><b>*</b></span></label>
+                        <input type="text" class="form-control" id="pageTitle" placeholder="pageTitle" required>
+                        </div>
+                        </div> *@
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">Descriptoion &nbsp;<span style="color: red;"><b>*</b></span></label>
+                                <textarea type="text" class="form-control" id="description" placeholder="description" required></textarea>
+                            </div>
+                        </div>
+
+                        @*  <div class="col-md-3">
+                        <div class="form-group">
+                        <label class="form-label">Hall Pass Upload &nbsp;<span style="color: red;"><b>*</b></span></label>
+                        <input type="file" class="form-control" id="profilephoto" required>
+                        </div>
+                        </div> *@
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button type="button" id="btncreate" class="btn btn-radius btn-success">Create</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card-body">
+            </div>
+            <div class="card-body">
+            </div>
+
+        </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.2/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $("#btncreate").click(function (e) {
+                e.preventDefault(); // Prevent the default form submission
+
+                // Form validation
+                if (!document.getElementById("formPost").checkValidity()) {
+                    return; // Exit the function if the form is not valid
+                }
+
+                var imgPath = '';
+                var totalFiles = document.getElementById('imageee').files.length;
+                if (totalFiles > 0) {
+                    uploadphoto();
+                }
+
+                var imgPath1 = '';
+                totalFiles = document.getElementById('insider').files.length; // Reassigning totalFiles
+                if (totalFiles > 0) {
+                    uploadphoto1();
+                }
+
+                var model = {
+                    name: $.trim($("#Name").val()),
+                    // price: parseFloat($("#price").val()), // You commented out price field, so skipping it
+                    image: imgPath,
+                    insideImage: imgPath1,
+                    descriptionHeading: $.trim($("#descriptionHeading").val()),
+                    description: $.trim($("#description").val()),
+                    // pageTitle: $.trim($("#pageTitle").val()), // You commented out pageTitle field, so skipping it
+                    createdBy: @Context.Session.GetInt32("UserId"),
+                };
+
+                // AJAX call
+                $.ajax({
+                    type: "POST",
+                    url: "@apiUrl/api/DigitalCatalog/DigitalCatalogCreate",
+                    data: JSON.stringify(model),
+                    contentType: "application/json; charset=utf-8",
+                    headers: {
+                        "authorization": "Bearer @Context.Session.GetString("TokenTxt")"
+                    },
+                    dataType: "json",
+                    success: function (data, statusText, xhr) {
+
+                        if (xhr.status === 200) {
+
+                            console.log(data);
+                            Swal.fire({
+                                html: true,
+                                title: "Catalog Add",
+                                text: "Successfully Created!",
+                                icon: "success"
+                            });
+                        } else {
+                            handleAjaxError(xhr);
+                        }
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        console.log(xhr.responseText); // Log the full response for debugging
+                        handleAjaxError(xhr);
+                    }
+                });
+            });
+
+            function uploadphoto() {
+                var formData = new FormData();
+                var files = document.getElementById('imageee').files;
+                formData.append("file", files[0]);
+                $.ajax({
+                    url: "/Upload/ImgUpload",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    type: "POST",
+                    success: function (data) {
+                        imgPath = data;
+                    },
+                    error: function (xhr) {
+                        console.log(xhr.responseText); // Log the full response for debugging
+                        handleAjaxError(xhr);
+                    }
+                });
+            }
+
+            function uploadphoto1() {
+                var formData = new FormData();
+                var files = document.getElementById('insider').files;
+                for (var i = 0; i < files.length; i++) {
+                    formData.append("files", files[i]);
+                }
+                $.ajax({
+                    url: "/Upload/ImgUploadMultiple",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    type: "POST",
+                    success: function (data) {
+                        // Handle success
+                        console.log(data);
+                    },
+                    error: function (xhr) {
+                        console.log(xhr.responseText); // Log the full response for debugging
+                        handleAjaxError(xhr);
+                    }
+                });
+            }
+
+            function handleAjaxError(xhr) {
+                if (xhr.status == 401) {
+                    // Session expired
+                    Swal.fire({
+                        html: true,
+                        title: "Session Expired",
+                        text: "Your current session has expired. You may return to login to start your task again.",
+                        icon: "error",
+                        showCancelButton: true,
+                        confirmButtonText: "Login",
+                        cancelButtonText: "Cancel"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = "/Login"; // Redirect to login page
+                        }
+                    });
+                } else {
+                    // Other error
+                    Swal.fire("Error", "An unexpected error occurred. Please try again later.", "error");
+                }
+            }
+        });
+    </script>
+}
+
+
+
+
+
+
+
+
+
